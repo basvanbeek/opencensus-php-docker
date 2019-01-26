@@ -1,0 +1,12 @@
+receivers:
+    opencensus:
+        address: ":55678"
+
+exporters:
+    prometheus:
+        address: ":8888"
+    zipkin:
+        endpoint: "http://zipkin:9411/api/v2/spans"
+
+zpages:
+    port: 55679

@@ -1,0 +1,55 @@
+version: '3.2'
+
+services:
+    zipkin:
+        image: openzipkin/zipkin:latest
+        container_name: ocphp_zipkin
+        ports:
+            # Port used for the Zipkin UI and HTTP API
+            - 9411:9411
+
+    prometheus:
+        image: prom/prometheus:v2.5.0
+        container_name: ocphp_prometheus
+        ports:
+            # Port used for the Prometheus UI
+            - 9090:9090
+        volumes:
+            - ./data/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+        links:
+            - agent
+
+    agent:
+        image: omnition/opencensus-agent:latest
+        container_name: ocphp_agent
+        volumes:
+            - ./data/agent/config.yaml:/config.yaml
+        ports:
+            # Port used for receiving OpenCensus stats and metrics
+            - 55678:55678
+            # Port used for serving zPages
+            - 55679:55679
+            # Port used to serve scrapable Prometheus metrics
+            - 8888:8888
+        links:
+            - zipkin
+
+    daemon:
+        image: basvanbeek/opencensus-daemon:latest
+        container_name: ocphp_daemon
+        command: -ocagent.addr agent:55678 -php.servicename ocphpdemo -log.level 4
+        volumes:
+            - ./data/daemon/socket:/tmp
+        links:
+            - agent
+
+    php:
+        image: basvanbeek/opencensus-php:latest
+        container_name: ocphp_php
+        volumes:
+            - ./data/daemon/socket:/tmp
+            - ./data/php:/var/www/html
+        ports:
+            - 80:80
+        links:
+            - daemon
