@@ -128,7 +128,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/census-instrumentation/opencensus-php",
-                "reference": "3293fa999d49dc348b9f54b7d64b7512f83a9125"
+                "reference": "7be06621df963b32dffb8ce8c264d33267362b66"
             },
             "archive": {
                 "exclude": [
@@ -188,7 +188,7 @@
                 }
             ],
             "description": "OpenCensus Trace Client for PHP",
-            "time": "2019-01-16T18:01:59+00:00"
+            "time": "2019-01-26T21:34:57+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -503,7 +503,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
