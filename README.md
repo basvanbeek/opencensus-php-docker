@@ -13,7 +13,7 @@ This docker-compose demo uses the following container set-up:
                                                                                        └────────────┘
 ```
 
-### starting the ecosystem
+### Starting the ecosystem
 
 To start the ecosystem, simply run:
 ```shell
@@ -39,7 +39,7 @@ If one of the above ports is already in use, you can adjust the ports in the
     - 9190:9090
 ```
 
-### running example code
+### Running example code
 
 The `data/php` folder is the PHP container's document root and the
 `data/php/html` directory is the Apache web root. This allows you to have code
@@ -61,3 +61,44 @@ the OpenCensus library and its dependencies.
 The script is similar to the typical Helloworld examples found in other
 OpenCensus language libraries to highlight how similar usage is in a polyglot
 environment while still trying to be idiomatic for each different language.
+
+### Using Stackdriver
+
+If you wish to use Stackdriver as your tracing and/or metrics backend you need
+to adjust the agent configuration file `config.yaml`. Uncomment the lines
+showing the stackdriver set-up and adjust to the GCP project id you wish to use:
+
+```yaml
+zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans"
+    # Uncomment below and provide correct projectid to enable stackdriver export.
+    stackdriver:
+        project: "my-project-id"
+        enable_tracing: true
+```
+
+To be able to connect to Stackdriver you need a credentials file. See:
+https://cloud.google.com/docs/authentication/getting-started for more information.
+
+Once you have a credentials file, place it in the `data/agent/credentials`
+directory. Finally adjust the `docker-compose.yml` and modify value for the
+environment variable `GOOGLE_APPLICATION_CREDENTIALS` as found in the agent
+container configuration. If your file is called `super-secret.json` you'd want
+something like this:
+
+```yaml
+    agent:
+        image: basvanbeek/opencensus-agent:latest
+        container_name: ocphp_agent
+        environment:
+            # Set to the correct credentials file if using Stackdriver
+            GOOGLE_APPLICATION_CREDENTIALS: credentials/super-secret.json
+```
+
+Now you can simply run:
+
+```shell
+docker-compose up
+```
+
+And your data is exported to Stackdriver in your GCP project.

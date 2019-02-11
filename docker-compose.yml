@@ -20,10 +20,14 @@ services:
             - agent
 
     agent:
-        image: omnition/opencensus-agent:latest
+        image: basvanbeek/opencensus-agent:latest
         container_name: ocphp_agent
+        environment:
+            # Set to the correct credentials file if using Stackdriver
+            GOOGLE_APPLICATION_CREDENTIALS: credentials/my-project-creds.json
         volumes:
             - ./data/agent/config.yaml:/config.yaml
+            - ./data/agent/credentials:/credentials
         ports:
             # Port used for receiving OpenCensus stats and metrics
             - 55678:55678

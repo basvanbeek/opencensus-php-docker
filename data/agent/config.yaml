@@ -7,6 +7,10 @@ exporters:
         address: ":8888"
     zipkin:
         endpoint: "http://zipkin:9411/api/v2/spans"
+    # Uncomment below and provide correct projectid to enable stackdriver export.
+    # stackdriver:
+    #     project: "my-project-id"
+    #     enable_tracing: true
 
 zpages:
     port: 55679
